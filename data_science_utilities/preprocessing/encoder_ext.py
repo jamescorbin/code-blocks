@@ -11,19 +11,11 @@ TODO:
 """
 
 import logging
+
 import numpy as np
 import sklearn.preprocessing
 
 log = logging.getLogger(name=__name__)
-log.setLevel(logging.INFO)
-logging.captureWarnings(True)
-formatter = logging.Formatter(
-    '%(asctime)s - %(name)s - %(levelname)s - %(message)s'
-)
-stream_handler = logging.StreamHandler()
-stream_handler.setLevel(logging.INFO)
-stream_handler.setFormatter(formatter)
-log.addHandler(stream_handler)
 
 UNK = "UNK"
 RANK = "rank"
