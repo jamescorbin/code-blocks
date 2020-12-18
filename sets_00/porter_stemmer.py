@@ -1,18 +1,25 @@
-vowels = ('a', 'e', 'i', 'o', 'u')
-'''
+"""
     Docstrings explaining the algorithm are taken directly
-    from the original literature.
+    from the original literature (ref: ).
 
     Code is written the interpretation of that text
     by J. Corbin.
-'''
+"""
 
-###############################################################################
+import os
+import sys
+import logging
 
-###############################################################################
+sys.path.insert(1, os.path.dirname(os.path.abspath(__file__)))
+import __init__ as pkg
+
+vowels = ('a', 'e', 'i', 'o', 'u')
+
+logger = logging.getLogger(name=__name__)
+
 
 def is_vowel(char, prev_char=''):
-    '''
+    """
     parameters:
         -- char, character in question
         -- prev_char, (optional) previous character. See desc. on 'y'
@@ -38,35 +45,39 @@ def is_vowel(char, prev_char=''):
     These may all be represented by the single form
 
         [C]VCVC ... [V]
-    '''
-    return ((char in vowels) or
-            (char=='y' and (not prev_char in vowels and prev_char!='')))
+    """
+    return (
+        (char in vowels) or
+        (char=='y' and (not prev_char in vowels and prev_char!=''))
+    )
 
-###############################################################################
-
-###############################################################################
 
 def is_const(char, prev_char=''):
-    '''
+    """
         c.f. is_vowel()
-    '''
+    """
     return ~is_vowel(char, prev_char)
 
-###############################################################################
 
-###############################################################################
+def has_vowel(word):
+    """
+    """
+    return (
+        any(
+            [is_vowel(char, word[i-1]) if i>0 else is_vowel(char)
+                for i, char in enumerate(word)
+            ]
+        )
+    )
 
-has_vowel = lambda word: any(
-                    [is_vowel(char, word[i-1]) if i>0 else is_vowel(char)
-                    for i, char in enumerate(word)])
-final_double_const = lambda word: word[-2]==word[-1] and not is_vowel(word[-1])
+def final_double_const(word):
+    """
+    """
+    return (word[-2]==word[-1] and not is_vowel(word[-1]))
 
-###############################################################################
-
-###############################################################################
 
 def cvc_form(word):
-    '''
+    """
     parameters:
         -- word, a string
     returns:
@@ -81,7 +92,7 @@ def cvc_form(word):
         CVCV ... V
         VCVC ... C
         VCVC ... V
-    '''
+    """
     return_val = False
     if len(word) >= 3:
         vowel_check = [is_vowel(char, word[i-1]) if i>0
@@ -95,12 +106,9 @@ def cvc_form(word):
             return_val = True
     return return_val
 
-###############################################################################
-
-###############################################################################
 
 def const_vowel_m(word):
-    '''
+    """
     parameters:
         -- word, a string
     returns:
@@ -157,7 +165,7 @@ def const_vowel_m(word):
 
     tests for a stem ending witha double consonant other than L, S or Z.
     Elaborate conditions like this are required only rarely.
-    '''
+    """
     vowel_check = [is_vowel(char, word[i-1]) if i>0
 		else is_vowel(char) for i, char in enumerate(word)]
 

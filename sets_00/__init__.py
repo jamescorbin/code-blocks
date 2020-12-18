@@ -3,11 +3,14 @@ import tempfile
 import datetime
 import os
 
+TXT = '.txt'
+NPY = '.npy'
+
 logging_dir = tempfile.TemporaryDirectory()
 now = datetime.datetime.now().strftime('%Y-%m-%d-%H-%M-%S')
 log_fp = os.path.join(logging_dir.name, f'{now}.txt')
 
-root = logging.getLogger(name=__name__)
+root = logging.getLogger()
 root.setLevel(logging.INFO)
 formatter = logging.Formatter(
         '%(asctime)s - %(name)s - %(levelname)s - %(message)s'

@@ -1,17 +1,25 @@
-import re
+"""
+"""
+
 import os
+import sys
+import re
+import logging
+
 import numpy as np
 
-TXT = '.txt'
-NPY = '.npy'
+sys.path.insert(1, os.path.dirname(os.path.abspath(__file__)))
+import __init__ as pkg
 
-###############################################################################
+TXT = pkg.TXT
+NPY = pkg.NPY
 
-###############################################################################
+logger = logging.getLogger(name=__name__)
+
 
 def write_dictionary(fns, outpt):
-    '''
-    '''
+    """
+    """
     sets = []
     for fn in fns:
         with open(fn, 'r') as f:
@@ -25,9 +33,6 @@ def write_dictionary(fns, outpt):
         f.write('\n'.join(combined_words))
     return combined_words
 
-###############################################################################
-
-###############################################################################
 
 def binary_search_index(ord_list, val, index=0):
     '''
@@ -45,24 +50,24 @@ def binary_search_index(ord_list, val, index=0):
         return_val = binary_search_index(new_list, val, index=new_index)
     return return_val
 
-###############################################################################
-
-###############################################################################
 
 def categorical_encoding(data, dictionary):
-    '''
-    '''
-    return np.array(
-                [binary_search_index(dictionary, x.strip()) for x in data])
+    """
+    """
+    return (
+        np.array(
+            [binary_search_index(dictionary, x.strip()) for x in data]
+        )
+    )
 
-###############################################################################
-
-###############################################################################
 
 if __name__=="__main__":
     import argparse
-    parser = argparse.ArgumentParser(
-            description="Counts unique words in Project Gutenburg text.")
+    parser = (
+        argparse.ArgumentParser(
+            description="Counts unique words in Project Gutenburg text."
+        )
+    )
     parser.add_argument("--file_names", nargs="+", help='')
     parser.add_argument("--dictionary_pt")
     args = parser.parse_args()

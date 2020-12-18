@@ -1,37 +1,42 @@
+"""
+"""
+
+import sys
+import os
+import logging
+
 import numpy as np
 
-###############################################################################
+sys.path.insert(1, os.path.dirname(os.path.abspath(__file__)))
+import __init__ as pkg
 
-###############################################################################
+logger = logging.getLogger(name=__name__)
+
 
 class WordNode():
-    '''
+    """
+    """
 
-    '''
     def __init__(self, word, word_ind):
-
+        """
+        """
         self.word = word
         self.word_ind = word_ind
         self.neighbors = []
 
     def __repr__(self):
-
+        """
+        """
         return f"{self.word}\t{self.word_ind}"
 
-###############################################################################
-
-###############################################################################
 
 class WordCloud():
-    '''
-    '''
-    ###########################################################################
-
-    ###########################################################################
+    """
+    """
 
     def __init__(self, dictionary, enum_connections):
-        '''
-        '''
+        """
+        """
         self.dictionary = dictionary
         self.dict_lookup = {word: i for i, word in enumerate(dictionary)}
         self.dict_size = len(dictionary)
@@ -45,15 +50,12 @@ class WordCloud():
                 self.graph[w1].neighbors.append(self.graph[w2])
                 self.graph[w2].neighbors.append(self.graph[w1])
             except:
-                print('w1', w1, 'w2', w2)
+                logger.error('w1', w1, 'w2', w2)
 
-    ###########################################################################
-
-    ###########################################################################
 
     def get_word_relation(self, word1, word2, depth_limit=5):
-        '''
-        '''
+        """
+        """
         word_ind1 = self.dict_lookup[word1]
         word_ind2 = self.dict_lookup[word2]
         wn1 = self.graph[word_ind1]
@@ -128,11 +130,6 @@ class WordCloud():
                 paths.append(row)
         return r_val, paths
 
-    ###########################################################################
-
-###############################################################################
-
-###############################################################################
 
 if __name__=="__main__":
     import argparse
@@ -154,5 +151,5 @@ if __name__=="__main__":
     for w1, w2 in words:
         wc = WordCloud(dictionary, pairs)
         d, paths = wc.get_word_relation(w1, w2)
-        print(f"WC get word relation {w1}-{w2}: {d}")
-        print(paths)
+        logger.info(f"WC get word relation {w1}-{w2}: {d}")
+        logger.info(paths)
