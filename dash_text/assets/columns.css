@@ -1,0 +1,8 @@
+.row:after {
+	padding-bottom: 15px;
+}
+
+.column {
+	float: left;
+	width: 50%;
+}

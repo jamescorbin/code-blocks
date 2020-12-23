@@ -1,0 +1,163 @@
+body {
+		max-width: 1200px; 
+		background: white;
+		margin: 0 auto;
+		padding-top: 50px;
+		padding-bottom: 50px;
+		counter-reset: section;
+		counter-reset: subsection;
+		counter-reset: statement;
+}
+
+.narrow_body {
+		max-width: 900px; 
+		background: white;
+		margin: 0 auto;
+		padding-top: 50px;
+		padding-bottom: 50px;
+		counter-reset: section;
+		counter-reset: subsection;
+		counter-reset: statement;
+}
+
+.section {
+		padding-top: 15px;
+		padding-bottom: 15px;
+}
+
+h2.section:before{
+		counter-increment: section;
+		content: "Section " counter(section) ": ";
+}
+
+.subsection {
+		padding-top: 5px;
+		padding-bottom: 5px;
+		margin: 10px;
+}
+
+h3.subsection:before{
+		counter-increment: subsection;
+		content: "Subsection " counter(section) "." counter(subsection) ": ";
+}
+		
+.jupyter-code {
+	font-size: 12pt;
+	color: black;
+	margin: 20px;
+	width: auto;
+	background-color: #F0F8FF;
+}
+
+.theorem {
+    display: block;
+    margin: 12px 0;
+    font-style: italic;
+}
+.theorem:before {
+	counter-increment: statement;
+    content: "Theorem."counter(section) "." counter(subsection)"."counter(statement)": ";
+    font-weight: bold;
+    font-style: normal;
+}
+.theorem::after {
+	padding-bottom: 5px;
+}
+
+.proposition {
+    display: block;
+    margin: 12px 0;
+    font-style: italic;
+}
+.proposition:before {
+	counter-increment: statement;
+    content: "Proposition."counter(section) "." counter(subsection)"."counter(statement)": ";
+    font-weight: bold;
+    font-style: normal;
+}
+
+.lemma {
+    display: block;
+    margin: 12px 0;
+    font-style: italic;
+}
+.lemma:before {
+	counter-increment: statement;
+    content: "Lemma."counter(section) "." counter(subsection)"."counter(statement)": ";
+    font-weight: bold;
+    font-style: normal;
+}
+
+.proof {
+    display: block;
+    margin: 12px 0;
+    font-style: normal;
+}
+.proof:before {
+	counter-increment: statement;
+    content: "Proof."counter(section) "." counter(subsection)"."counter(statement)": ";
+    font-style: italic;
+}
+.proof:after {
+    content: "\25FC";
+    float:right;
+}
+
+.definition {
+    display: block;
+    margin: 12px 0;
+    font-style: normal;
+}
+.definition:before {
+	counter-increment: statement;
+    content: "Definition."counter(section) "." counter(subsection)"."counter(statement)": ";
+    font-weight: bold;
+    font-style: normal;
+}
+
+.exercise {
+    display: block;
+    margin: 12px 0;
+    font-style: normal;
+}
+.exercise::before {
+	counter-increment: statement;
+    content: "Exercise."counter(section) "." counter(subsection)"."counter(statement)": ";
+    font-weight: bold;
+    font-style: normal;
+}
+
+.solution {
+    display: block;
+    margin: 12px 0;
+    font-style: normal;
+}
+.solution::before {
+    content: "Solution."counter(section) "." counter(subsection)"."counter(statement)": ";
+    font-weight: bold;
+    font-style: normal;
+}
+
+.example {
+    display: block;
+    margin: 12px 0;
+    font-style: normal;
+}
+.example:before {
+	counter-increment: statement;
+    content: "Example."counter(section) "." counter(subsection)"."counter(statement)": ";
+    font-weight: bold;
+    font-style: normal;
+}
+
+.remark {
+    display: block;
+    margin: 12px 0;
+    font-style: normal;
+}
+.remark:before {
+	counter-increment: statement;
+    content: "Remark."counter(section) "." counter(subsection)"."counter(statement)": ";
+    font-weight: bold;
+    font-style: normal;
+}

@@ -1,10 +1,23 @@
+import sys
+import os
 import logging
 import tempfile
 import datetime
-import os
+
+sys.path.insert(1, os.path.dirname(os.path.abspath(__file__)))
+import gutenberg
 
 TXT = '.txt'
+JSON = '.json'
+ZIP = '.zip'
 NPY = '.npy'
+
+default_text_dir = gutenberg.default_text_dir
+default_index = gutenberg.default_index
+default_ascii_dir = gutenberg.default_ascii_dir
+default_truncated_dir = gutenberg.default_truncated_dir
+default_preprocessed_dir = os.path.join(default_text_dir, 'preprocessed')
+default_ancillary_dir = os.path.join(default_text_dir, 'ancillary')
 
 logging_dir = tempfile.TemporaryDirectory()
 now = datetime.datetime.now().strftime('%Y-%m-%d-%H-%M-%S')

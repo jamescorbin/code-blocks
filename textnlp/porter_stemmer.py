@@ -191,13 +191,8 @@ def const_vowel_m(word):
 
     return m
 
-###############################################################################
-
-###############################################################################
 
 class PorterStemmer():
-
-    ###########################################################################
     '''
     The step_\d_map attribute is encoded
     from the literature.
@@ -255,17 +250,10 @@ class PorterStemmer():
                     'ize': '',
                     }
 
-    ###########################################################################
-
-    ###########################################################################
 
     def __init__(self):
-
         pass
 
-    ###########################################################################
-
-    ###########################################################################
 
     def run_word(self, word):
         '''
@@ -283,9 +271,6 @@ class PorterStemmer():
 
         return word
 
-    ###########################################################################
-
-    ###########################################################################
 
     def run(self, words):
         '''
@@ -298,12 +283,10 @@ class PorterStemmer():
             words[i] = self.run_word(word)
         return words
 
-    ###########################################################################
-
-    ###########################################################################
 
     def custom_step(self, word):
-
+        """
+        """
         new_word = word
         if word[-5:] == "ingly":
             new_word = word[:-2]
@@ -312,12 +295,9 @@ class PorterStemmer():
                 new_word = word[:-3]
         return new_word
 
-    ###########################################################################
-
-    ###########################################################################
 
     def step_1(self, word):
-        '''
+        """
         parameters:
             -- word, a string; the word to be stemmed
 
@@ -382,7 +362,7 @@ class PorterStemmer():
 
         Step 1 deals with plurals and past participles. The subsequent steps are
         much more straightforward.
-        '''
+        """
         new_word = word
         extra_cond = False
 
@@ -418,8 +398,9 @@ class PorterStemmer():
                   and cvc_form(new_word[-3:])):
                 new_word = new_word + 'e'
 
-        if new_word[-1]=='y' and has_vowel(new_word[:-1]):
-            new_word = new_word[:-1] + 'i'
+        if len(new_word)>0:
+            if (new_word[-1]=='y' and has_vowel(new_word[:-1])):
+                new_word = new_word[:-1] + 'i'
 
         return new_word
 
@@ -538,7 +519,7 @@ class PorterStemmer():
     ###########################################################################
 
     def step_5(self, word):
-        '''
+        """
         parameters:
             -- word, a string; word to be stemmed.
         returns:
@@ -555,31 +536,30 @@ class PorterStemmer():
             (m > 1 and *d and *L) -> single letter
                                             controll       ->  control
                                             roll           ->  roll
-        '''
+        """
         new_word = word
-        if (new_word[-1] == 'e') and (const_vowel_m(new_word[:-1])>1):
-            new_word = new_word[:-1]
-        elif ((new_word[-1] == 'e') and (const_vowel_m(new_word[:-1])==1)
-                and
-                ((len(new_word) < 4) or not cvc_form(new_word[-4:-1]))
-                ):
-            new_word = new_word[:-1]
+        if len(new_word)>0:
+            if (new_word[-1] == 'e') and (const_vowel_m(new_word[:-1])>1):
+                new_word = new_word[:-1]
+            elif ((new_word[-1] == 'e') and (const_vowel_m(new_word[:-1])==1)
+                    and
+                    ((len(new_word) < 4) or not cvc_form(new_word[-4:-1]))
+                    ):
+                new_word = new_word[:-1]
 
-        if ((len(new_word)>1)
-                and (new_word[-1]=='l')
-                and (new_word[-1]==new_word[-2])
-                and (const_vowel_m(new_word)>1)
-                ):
-            new_word = new_word[:-1]
+            if ((len(new_word)>1)
+                    and (new_word[-1]=='l')
+                    and (new_word[-1]==new_word[-2])
+                    and (const_vowel_m(new_word)>1)
+                    ):
+                new_word = new_word[:-1]
 
         return new_word
 
-    ###########################################################################
-
-    ###########################################################################
 
     def steps_234_template(self, word, mapping, m_bounds):
-
+        """
+        """
         new_word = word
         stop = False
         for k, v in mapping.items():
@@ -591,116 +571,6 @@ class PorterStemmer():
                 stop = True
         return new_word
 
-    ###########################################################################
-
-###############################################################################
-
-###############################################################################
-
-def run_samples():
-
-    stemmer =  PorterStemmer()
-
-    words_1 = [
-            ("caresses", "caress"),
-            ("ponies", "poni"),
-            ("ties", "ti"),
-            ("caress", "caress"),
-            ("cats", "cat"),
-            ("feed", "feed"),
-            ("agreed", "agree"),
-            ("plastered", "plaster"),
-            ("bled", "bled"),
-            ("motoring", "motor"),
-            ("sing", "sing"),
-            ("conflated", "conflate"),
-            ("troubled", "trouble"),
-            ("sized", "size"),
-            ("hopping", "hop"),
-            ("tanned", "tan"),
-            ("falling", "fall"),
-            ("hissing", "hiss"),
-            ("fizzed", "fizz"),
-            ("failing", "fail"),
-            ("filing", "file"),
-            ("happy", "happi"),
-            ("sky", "sky"),
-            ]
-    words_2 = [
-            ("relational", "relate"),
-            ("conditional", "condition"),
-            ("rational", "rational"),
-            ("valenci", "valence"),
-            ("hesitanci", "hesitance"),
-            ("digitizer", "digitize"),
-            ("conformabli", "conformable"),
-            ("radicalli", "radical"),
-            ("differentli", "different"),
-            ("vileli", "vile"),
-            ("analogousli", "analogous"),
-            ("vietnamization", "vietnamize"),
-            ("predication", "predicate"),
-            ("operator", "operate"),
-            ("feudalism", "feudal"),
-            ("decisiveness", "decisive"),
-            ("hopefulness", "hopeful"),
-            ("callousness", "callous"),
-            ("formaliti", "formal"),
-            ("sensitiviti", "sensitive"),
-            ("sensibiliti", "sensible"),
-            ]
-    words_3 = [
-            ("triplicate", "triplic"),
-            ("formative", "form"),
-            ("formalize", "formal"),
-            ("electriciti", "electric"),
-            ("electrical", "electric"),
-            ("hopeful", "hope"),
-            ("goodness", "good"),
-            ]
-    words_4 = [
-            ("revival", "reviv"),
-            ("allowance", "allow"),
-            ("inference", "infer"),
-            ("airliner", "airlin"),
-            ("gyroscopic", "gyroscop"),
-            ("adjustable", "adjust"),
-            ("defensible", "defens"),
-            ("irritant", "irrit"),
-            ("replacement", "replac"),
-            ("adjustment", "adjust"),
-            ("dependent", "depend"),
-            ("adoption", "adopt"),
-            ("homologou", "homolog"),
-            ("communism", "commun"),
-            ("activate", "activ"),
-            ("angulariti", "angular"),
-            ("homologous", "homolog"),
-            ("effective", "effect"),
-            ("bowdlerize", "bowdler"),
-            ]
-    words_5 = [
-            ("probate", "probat"),
-            ("rate", "rate"),
-            ("cease", "ceas"),
-            ("controll", "control"),
-            ("roll", "roll"),
-            ]
-
-    for w1, w2 in words_1:
-        print(w1, w2, stemmer.step_1(w1))
-    for w1, w2 in words_2:
-        print(w1, w2, stemmer.step_2(w1))
-    for w1, w2 in words_3:
-        print(w1, w2, stemmer.step_3(w1))
-    for w1, w2 in words_4:
-        print(w1, w2, stemmer.step_4(w1))
-    for w1, w2 in words_5:
-        print(w1, w2, stemmer.step_5(w1))
-
-###############################################################################
-
-###############################################################################
 
 if __name__=="__main__":
     import argparse
