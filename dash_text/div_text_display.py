@@ -43,6 +43,14 @@ def _fetch_data(fbn):
 def main(app):
     """
     """
+    div_text_files = (
+        html.Div(
+            id='div_text_files',
+            children="",
+            hidden=True,
+        )
+    )
+
     div_text_dir = (
         html.Div(
             id='div_text_dir',
@@ -50,19 +58,6 @@ def main(app):
             hidden=True,
         )
     )
-
-    @app.callback(
-        Output("div_ebook_button_dummy", 'children'),
-        Output('div_text_files', 'children'),
-        [
-            Input("confirm_ebook_button", "n_clicks"),
-            State("ebook_input", "value"),
-            State("div_text_dir", "children"),
-        ]
-    )
-    def download(n_clicks, _id, chl):
-        gutenberg_dl.fetch_unpack(_id)
-        return '', os.listdir(chl)
 
     div_dd_wrapper = [
         html.Div(

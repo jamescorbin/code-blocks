@@ -9,8 +9,12 @@ import urllib.request
 import zipfile
 import re
 
-sys.path.insert(1, os.path.dirname(os.path.abspath(__file__)))
-import __init__ as pkg
+proj_path = os.path.dirname(
+        os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    )
+if proj_path not in sys.path:
+    sys.path.insert(1, proj_path)
+import textnlp.gutenberg as pkg
 
 logger = logging.getLogger(name=__name__)
 

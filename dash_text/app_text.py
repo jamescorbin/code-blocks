@@ -1,10 +1,12 @@
 import os
 import sys
+import logging
 import json
 import base64
 import tempfile
 
 import pandas as pd
+import matplotlib.pyplot as plt
 import plotly.graph_objects as go
 import plotly.express as px
 
@@ -14,28 +16,28 @@ import dash_html_components as html
 import dash_table
 from dash.dependencies import Input, Output, State
 
-gutenberg_proj = "/home/jamescorbin/GIT/code_blocks"
-if not os.path.exists(gutenberg_proj):
+proj_path = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+if not os.path.exists(proj_path):
     raise OSError()
-sys.path.insert(1, gutenberg_proj)
+if proj_path not in sys.path:
+    sys.path.insert(1, proj_path)
 import textnlp.gutenberg
 import textnlp.gutenberg.gutenberg_index as gutenberg_index
 import textnlp.gutenberg.gutenberg_dl as gutenberg_dl
 import textnlp.gutenberg.load_text as load_text
 import textnlp.visualization as visualization
 
-import plotly.graph_objects as go
+import dash_text.catalogue_index as catalogue_index
+#import div_text_display
 
-import div_index_header
-import div_text_display
-
-import matplotlib.pyplot as plt
 
 JSON = '.json'
 TXT = '.txt'
 text_dir = "/home/jamescorbin/Desktop/texts"
 text_dir = os.path.join(text_dir, "ascii")
 text_files = os.listdir(text_dir)
+
+logger = logging.getLogger(name=__name__)
 
 
 def _plot_wordcloud(_id):
@@ -79,8 +81,9 @@ def main():
     """
     df = gutenberg_index.load_index()
 
-    div_index = div_index_header.make_div_gutenberg_index(df)
+    div_index = catalogue_index.make_div_gutenberg_index(app, df)
 
+    '''
     div_columns = div_text_display.main(app)
 
     div_wc_l = html.Div(id='div_wc_l')
@@ -113,6 +116,7 @@ def main():
     )
     def _plot_bigrams_l(txt):
         return _plot_bigrams(txt)
+    '''
 
 
 
@@ -121,10 +125,10 @@ def main():
             id='body',
             children=[
                 div_index,
-                div_columns,
-                div_wc_l,
-                div_wc_r,
-                div_bigrams_l,
+                #div_columns,
+                #div_wc_l,
+                #div_wc_r,
+                #div_bigrams_l,
             ],
         )
     )

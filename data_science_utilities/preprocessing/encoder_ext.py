@@ -17,7 +17,7 @@ import sklearn.preprocessing
 
 log = logging.getLogger(name=__name__)
 
-UNK = "UNK"
+UNK = "[UNK]"
 RANK = "rank"
 NUMBER = "number"
 FREQUENCY = "frequency"
@@ -35,63 +35,72 @@ class LabelEncoderExt(sklearn.preprocessing.LabelEncoder):
         if top_n is not None:
             self.criterion = RANK
             try:
-                self.criterion_val = int(top_n)
+                self.c_value = int(top_n)
             except ValueError as e:
                 log.error(e)
         elif count_thresh is not None:
             self.criterion = NUMBER
             try:
-                self.criterion_val = int(count_thresh)
+                self.c_value = int(count_thresh)
             except ValueError as e:
                 log.error(e)
         elif freq_thresh is not None:
             self.criterion = FREQUENCY
             try:
-                self.criterion_val = float(freq_thresh)
+                self.c_value = float(freq_thresh)
             except ValueError as e:
                 log.error(e)
         else:
             self.criterion = ""
-            self.criterion_val = None
+            self.c_value = None
 
 
-    def fit(self, x):
+    def fit(self, x, from_counts=False):
         """
         """
-        try:
-            x = np.array(x)
-        except ValueError as e:
-            log.error(e)
-        assert (len(x.shape)==1), "Require 1D array"
-        
-        x = x.astype(str)
-        
-        unique_elem, unique_indices, elem_locs, elem_counts = (
-            np.unique(
-                x,
-                return_index=True,
-                return_inverse=True,
-                return_counts=True,
-            )
-        )
-
-        y = np.full(x.shape, "", dtype=STRLEN)
-
-        if self.criterion == RANK:
-            a = np.argpartition(elem_counts, self.criterion_val)
-            for t in a:
-                y[np.where(elem_locs==t)] = unique_elem[t]
-        elif self.criterion == NUMBER:
-            for i, t in np.ndenumerate(elem_counts):
-                if t >= self.criterion_val:
-                    y[np.where(elem_locs==i)] = unique_elem[i]
-        elif self.criterion == FREQUENCY:
-            for i, t in np.ndenumerate(elem_counts):
-                if t/x.shape[0] >= self.criterion_val:
-                    y[np.where(elem_locs==i)] = unique_elem[i]
+        if from_counts:
+            y = []
+            if isinstance(x, dict):
+                y = np.array(
+                        [k for k, v in x.items() if v>=self.c_value]
+                    )
+            else:
+                raise TypeError("Must pass dictionary of counts.")
         else:
-            y = x
-        y[np.where(y=="")] = UNK
+            try:
+                x = np.array(x)
+            except ValueError as e:
+                log.error(e)
+            assert (len(x.shape)==1), "Require 1D array"
+
+            x = x.astype(str)
+
+            unique_elem, unique_indices, elem_locs, elem_counts = (
+                np.unique(
+                    x,
+                    return_index=True,
+                    return_inverse=True,
+                    return_counts=True,
+                )
+            )
+
+            y = np.full(x.shape, "", dtype=STRLEN)
+
+            if self.criterion == RANK:
+                a = np.argpartition(elem_counts, self.c_value)
+                for t in a:
+                    y[np.where(elem_locs==t)] = unique_elem[t]
+            elif self.criterion == NUMBER:
+                for i, t in np.ndenumerate(elem_counts):
+                    if t >= self.c_value:
+                        y[np.where(elem_locs==i)] = unique_elem[i]
+            elif self.criterion == FREQUENCY:
+                for i, t in np.ndenumerate(elem_counts):
+                    if t/x.shape[0] >= self.c_value:
+                        y[np.where(elem_locs==i)] = unique_elem[i]
+            else:
+                y = x
+            y[np.where(y=="")] = UNK
 
         y = np.concatenate((y, np.array([UNK])))
         super(LabelEncoderExt, self).fit(y)
@@ -99,21 +108,25 @@ class LabelEncoderExt(sklearn.preprocessing.LabelEncoder):
         return 0
 
 
-    def transform(self, x):
+    def transform(self, x, **kwargs):
         """
         """
+        try:
+            x = np.array(x)
+        except ValueError as e:
+            log.error(e)
         x = x.astype(str)
         x[~np.isin(x, self.classes_)] = UNK
 
         return super(LabelEncoderExt, self).transform(x)
 
 
-    def fit_transform(self, x):
+    def fit_transform(self, x, **kwargs):
         """
         """
-        self.fit(x)
+        self.fit(x, **kwargs)
 
-        return self.transform(x)
+        return self.transform(x, **kwargs)
 
 
 class OrdinalEncoderExt(sklearn.preprocessing.OrdinalEncoder):
@@ -136,24 +149,24 @@ class OrdinalEncoderExt(sklearn.preprocessing.OrdinalEncoder):
         if top_n is not None:
             self.criterion = RANK
             try:
-                self.criterion_val = int(top_n)
+                self.c_value = int(top_n)
             except ValueError as e:
                 log.error(e)
         elif count_thresh is not None:
             self.criterion = NUMBER
             try:
-                self.criterion_val = int(count_thresh)
+                self.c_value = int(count_thresh)
             except ValueError as e:
                 log.error(e)
         elif freq_thresh is not None:
             self.criterion = FREQUENCY
             try:
-                self.criterion_val = float(freq_thresh)
+                self.c_value = float(freq_thresh)
             except ValueError as e:
                 log.error(e)
         else:
             self.criterion = ""
-            self.criterion_val = None
+            self.c_value = None
 
 
     def fit(self, X):
@@ -179,16 +192,16 @@ class OrdinalEncoderExt(sklearn.preprocessing.OrdinalEncoder):
             )
 
             if self.criterion == RANK:
-                a = np.argpartition(elem_counts, self.criterion_val)
+                a = np.argpartition(elem_counts, self.c_value)
                 for t in a:
                     Y[np.where(elem_locs==t), j] = unique_elem[t]
             elif self.criterion == NUMBER:
                 for i, t in np.ndenumerate(elem_counts):
-                    if t >= self.criterion_val:
+                    if t >= self.c_value:
                         Y[np.where(elem_locs==i), j] = unique_elem[i]
             elif self.criterion == FREQUENCY:
                 for i, t in np.ndenumerate(elem_counts):
-                    if t/X.shape[0] >= self.criterion_val:
+                    if t/X.shape[0] >= self.c_value:
                         Y[np.where(elem_locs==i), j] = unique_elem[i]
             else:
                 Y[:, j] = X[:, j]

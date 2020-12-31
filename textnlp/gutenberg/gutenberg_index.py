@@ -8,9 +8,13 @@ import re
 
 import pandas as pd
 
-sys.path.insert(1, os.path.dirname(os.path.abspath(__file__)))
-import __init__ as pkg
-import load_text
+proj_path = os.path.dirname(
+        os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    )
+if proj_path not in sys.path:
+    sys.path.insert(1, proj_path)
+import textnlp.gutenberg as pkg
+import textnlp.gutenberg.load_text as load_text
 
 default_index = pkg.default_index
 index_header = "\s*<==LISTINGS==>"

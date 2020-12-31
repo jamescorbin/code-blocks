@@ -12,8 +12,8 @@ proj_path = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 if proj_path not in sys.path:
     sys.path.insert(1, proj_path)
 import textnlp as pkg
-import pretokenize
-import gutenberg.load_text as load_text
+import textnlp.pretokenize as pretokenize
+import textnlp.gutenberg.load_text as load_text
 
 logger = logging.getLogger(name=__name__)
 
