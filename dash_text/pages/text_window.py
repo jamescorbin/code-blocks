@@ -3,28 +3,25 @@ import sys
 import json
 import base64
 
-
 import dash
 import dash_core_components as dcc
 import dash_html_components as html
 import dash_table
 from dash.dependencies import Input, Output, State
 
-gutenberg_proj = "/home/jamescorbin/GIT/code_blocks"
-if not os.path.exists(gutenberg_proj):
+proj_path = os.path.dirname(
+        os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    )
+if not os.path.exists(proj_path):
     raise OSError()
-sys.path.insert(1, gutenberg_proj)
+if proj_path not in sys.path:
+    sys.path.insert(1, proj_path)
+
+import dash_text as pkg
 import textnlp.gutenberg
-import textnlp.gutenberg.gutenberg_index as gutenberg_index
-import textnlp.gutenberg.gutenberg_dl as gutenberg_dl
 import textnlp.gutenberg.load_text as load_text
-import textnlp.visualization as visualization
 
-
-
-text_dir = "/home/jamescorbin/Desktop/texts"
-text_dir = os.path.join(text_dir, "ascii")
-text_files = os.listdir(text_dir)
+text_dir = pkg.text_dir
 
 
 def _fetch_data(fbn):

@@ -9,14 +9,17 @@ import dash_html_components as html
 import dash_table
 from dash.dependencies import Input, Output, State
 
-proj_path = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+logger = logging.getLogger(name=__name__)
+
+proj_path = os.path.dirname(
+        os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    )
 if not os.path.exists(proj_path):
     raise OSError()
 if proj_path not in sys.path:
     sys.path.insert(1, proj_path)
-import textnlp.gutenberg.gutenberg_dl as gutenberg_dl
 
-logger = logging.getLogger(name=__name__)
+import textnlp.gutenberg.gutenberg_dl as gutenberg_dl
 
 
 def make_div_gutenberg_index(app, df):
@@ -60,24 +63,26 @@ def make_div_gutenberg_index(app, df):
                 div_index_table,
                 ebook_input,
                 confirm_ebook_button,
-                div_ebook_button_dummy,
                 div_download_status,
-                #div_text_files,
+                div_ebook_button_dummy,
             ],
         )
     )
 
     @app.callback(
         Output("div_ebook_button_dummy", 'children'),
-        #Output('div_text_files', 'children'),
+        Output('div_download_status', 'children'),
         [
             Input("confirm_ebook_button", "n_clicks"),
             State("ebook_input", "value"),
-        #    State("div_text_dir", "children"),
         ]
     )
     def download(n_clicks, _id):
         gutenberg_dl.fetch_unpack(_id)
-        return ''#, os.listdir(chl)
+        out_message = (
+            f"Succesfully downloaded {_id}"
+                if _id is not None else "Awaiting catalogue selection."
+        )
+        return '', out_message
 
     return div_index

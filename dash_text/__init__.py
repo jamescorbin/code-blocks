@@ -9,6 +9,13 @@ if proj_path not in sys.path:
     sys.path.insert(1, proj_path)
 
 TXT = '.txt'
+JSON = '.json'
+
+css_dir = os.path.join(os.path.dirname(proj_path), 'css_files', 'dash')
+asset_dir = os.path.join(os.path.dirname(__file__), 'assets')
+
+parent_text_dir = "/home/jamescorbin/Desktop/texts"
+text_dir = os.path.join(parent_text_dir, "ascii")
 
 logging_dir = tempfile.TemporaryDirectory()
 now = datetime.datetime.now().strftime('%Y-%m-%d-%H-%M-%S')
