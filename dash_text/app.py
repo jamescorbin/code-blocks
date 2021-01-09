@@ -18,6 +18,7 @@ if proj_path not in sys.path:
 import dash_text as pkg
 import dash_text.pages.catalogue_index as catalogue_index
 import dash_text.pages.text_window as text_window
+import dash_text.pages.word_cloud as word_cloud
 import textnlp.gutenberg.gutenberg_index as gutenberg_index
 
 css_dir = pkg.css_dir
@@ -44,7 +45,7 @@ update_css(css_dir)
 app = dash.Dash(
         __name__,
         update_title=None,
-#        suppress_callback_exceptions=True,
+        suppress_callback_exceptions=True,
     )
 
 
@@ -53,6 +54,8 @@ def main():
     """
     df = gutenberg_index.load_index()
     div_index = catalogue_index.make_div_gutenberg_index(app, df)
+    div_text = text_window.main(app)
+    div_word_cloud = word_cloud.main(app)
 
     catalogue_tab = dcc.Tab(
             id="catalogue_tab",
@@ -92,7 +95,8 @@ def main():
         if tab=='tab-1':
             return div_index
         elif tab=='tab-2':
-            return text_window.main(app)
+            #return div_text
+            return html.Div(children=[div_text, div_word_cloud])
         else:
             return html.Div('hello world')
 

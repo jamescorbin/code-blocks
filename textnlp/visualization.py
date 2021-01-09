@@ -18,7 +18,7 @@ if proj_path not in sys.path:
 import textnlp as pkg
 
 
-def plot_wordcloud(counts, title=''):
+def plot_wordcloud(counts, title='', wc_size=(12, 12)):
     """
     """
     try:
@@ -29,7 +29,6 @@ def plot_wordcloud(counts, title=''):
         counts.pop('p')
     except:
         pass
-    wc_size = (14, 14)
     sm = sum(counts.values())
     frequency_dict = {k: v/sm for k, v in counts.items()}
 
@@ -76,6 +75,9 @@ def plot_bigrams(text, title='', take=100, **kwargs):
     fig.update_layout(
         go.Layout(
             xaxis = dict(rangeslider={'visible': True}),
+            width=1200,
+            height=800,
+            paper_bgcolor="LightSteelBlue",
         )
     )
     return fig

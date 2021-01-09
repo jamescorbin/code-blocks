@@ -1,5 +1,6 @@
 import os
 import sys
+import logging
 import json
 import base64
 
@@ -17,6 +18,8 @@ if not os.path.exists(proj_path):
 if proj_path not in sys.path:
     sys.path.insert(1, proj_path)
 
+logger = logging.getLogger(name=__name__)
+
 import dash_text as pkg
 import textnlp.gutenberg
 import textnlp.gutenberg.load_text as load_text
@@ -24,7 +27,7 @@ import textnlp.gutenberg.load_text as load_text
 text_dir = pkg.text_dir
 
 
-def _fetch_data(fbn):
+def _fetch_data(fbn, text_dir):
     """
     """
     fn = os.path.join(text_dir, fbn)
@@ -36,57 +39,55 @@ def _fetch_data(fbn):
     return text
 
 
-
 def main(app):
     """
     """
-    div_text_files = (
-        html.Div(
+    div_text_files = html.Div(
             id='div_text_files',
-            children="",
+            children=os.listdir(text_dir),
             hidden=True,
         )
-    )
 
-    div_text_dir = (
-        html.Div(
+    div_text_dir = html.Div(
             id='div_text_dir',
             children=text_dir,
             hidden=True,
         )
-    )
 
-    div_dd_wrapper = [
-        html.Div(
-            id="div_dd_wrapper_0",
-            children=(
-                dcc.Dropdown(
-                    id='text-dd-l',
-                    value='',
-                    options=[
-                        {'label': x, 'value': x}
-                        for x in os.listdir(text_dir)
-                    ],
-                )
-            )
-        ),
-        html.Div(id="div_dd_wrapper_1",
-            children=(
-                dcc.Dropdown(
-                    id='text-dd-r',
-                    value='',
-                    options=[
-                        {'label': x, 'value': x}
-                        for x in os.listdir(text_dir)
-                    ],
-                )
-            )
-        ),
-    ]
+    text_dd = dcc.Dropdown(
+            id='text_dd',
+            value='',
+            options=[
+                {'label': x, 'value': x}
+                for x in os.listdir(text_dir)
+            ],
+        )
+
+    div_dd_wrapper = html.Div(
+            id="div_dd_wrapper",
+            children=text_dd,
+        )
+
+    textbox = dcc.Textarea(
+            id='textbox',
+            style={'width': '100%', 'height': 300},
+#            cols=80,
+#            rows=40,
+            value='Select text.',
+        )
+
+    columns = html.Div(
+            id='div_columns',
+            children=[
+                div_dd_wrapper,
+                div_text_dir,
+                div_text_files,
+                textbox,
+            ],
+        )
 
     @app.callback(
-        Output('div_dd_wrapper_0', 'children'),
-        Output('div_dd_wrapper_1', 'children'),
+        Output('div_dd_wrapper', 'children'),
         Input('div_text_files', 'children'),
         State('div_text_dir', 'children')
     )
@@ -94,79 +95,18 @@ def main(app):
         text_files = os.listdir(tdir)
         return (
             dcc.Dropdown(
-                id='text-dd-l',
+                id='text_dd',
                 value='',
                 options=[{'label': x, 'value': x} for x in text_files],
-            ),
-            dcc.Dropdown(
-                id='text-dd-r',
-                value='',
-                options=[{'label': x, 'value': x} for x in text_files],
-            ),
-        )
-
-    textboxes = [
-        dcc.Textarea(
-            id='textbox_l',
-            rows=20,
-            cols=80,
-        ),
-        dcc.Textarea(
-            id='textbox_r',
-            rows=20,
-            cols=80,
-        ),
-    ]
-
-    @app.callback(
-        Output(component_id='textbox_l', component_property='value'),
-        Input('text-dd-l', 'value'),
-    )
-    def _update_left_textbox(fbn):
-        return (
-            _fetch_data(fbn)
+            )
         )
 
     @app.callback(
-        Output(component_id='textbox_r', component_property='value'),
-        Input('text-dd-r', 'value'),
+        Output(component_id='textbox', component_property='value'),
+        Input('text_dd', 'value'),
+        State('div_text_dir', 'children'),
     )
-    def _update_right_textbox(fbn):
-        return _fetch_data(fbn)
-
-
-    coll = (
-        html.Div(
-            className='column',
-            children=[
-                html.Div(id='lt', children='Left'),
-                div_dd_wrapper[0],
-                textboxes[0],
-            ],
-        )
-    )
-
-    colr = (
-        html.Div(
-            className='column',
-            children=[
-                html.Div(id='rt', children='Right'),
-                div_dd_wrapper[1],
-                textboxes[1],
-            ],
-        )
-    )
-
-    columns = (
-        html.Div(
-            id='div_columns',
-            children=[
-                div_text_dir,
-                coll,
-                colr,
-            ],
-        )
-    )
-
+    def _update_textbox(fbn, txt_dir):
+        return _fetch_data(fbn, txt_dir)
 
     return columns
