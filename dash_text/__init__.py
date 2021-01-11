@@ -11,7 +11,7 @@ if proj_path not in sys.path:
 TXT = '.txt'
 JSON = '.json'
 
-css_dir = os.path.join(os.path.dirname(proj_path), 'css_files', 'dash')
+css_dir = os.path.join(os.path.dirname(proj_path), 'css-files', 'dash')
 asset_dir = os.path.join(os.path.dirname(__file__), 'assets')
 
 parent_text_dir = "/home/jamescorbin/Desktop/texts"
