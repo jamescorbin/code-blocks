@@ -72,7 +72,7 @@ def main():
             children=[
                 catalogue_tab,
                 text_window_tab,
-                dcc.Tab(label='test tab', value='tab-3')
+                dcc.Tab(label='Markov Text', value='tab-3')
             ],
         )
     tabs_content = html.Div(id='tabs_content')

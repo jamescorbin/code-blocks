@@ -146,7 +146,7 @@ def _reversed_readline(fn, buffer=32000):
 
         while l_pointer > 0:
             r_pointer = l_pointer
-            l_pointer = min(f.tell() - buffer, 0)
+            l_pointer = max(f.tell() - buffer, 0)
             f.seek(l_pointer)
             buffer_text = (f.read(r_pointer-l_pointer) + fragment
                            if fragment
