@@ -25,17 +25,15 @@ def load_text(
     header=header,
     use_header=True,
     footer=footer,
-    use_footer=True,
-    ):
+    use_footer=True,):
     """
-    parameters:
+    This method opens a Project Guetenberg Ebook
+        and cuts off the header and footer.
+        See ${footer} and ${header}.
+    Args:
             -- fn, file path
-    returns:
+    Returns:
             -- data, string (utf-8)
-    description:
-            This method opens a Project Guetenberg Ebook
-            and cuts off the header and footer.
-            See ${footer} and ${header}.
     """
     if not os.path.exists(fn):
         msg = f"File {fn} not found."
@@ -124,16 +122,15 @@ def load_text(
 
 def _reversed_readline(fn, buffer=32000):
     """
-    parameters:
-            -- {fn}, file name
-            -- {buffer}=32000, buffer size
-    returns:
-            -- line, string
-            -- line_number, integer; lines from end of file
-    description:
-            Generator which reads lines from the end of a file.
-            The file is buffered and the index counting from the back
-            end of the file is also returned.
+    Generator which reads lines from the end of a file.
+        The file is buffered and the index counting from the back
+        end of the file is also returned.
+    Args:
+        -- {fn}, file name
+        -- {buffer}=32000, buffer size
+    Returns:
+        -- line, string
+        -- line_number, integer; lines from end of file
     """
     with open(fn, 'r') as f:
         f.seek(0, os.SEEK_END)

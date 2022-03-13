@@ -9,38 +9,33 @@ import urllib.request
 import zipfile
 import re
 
-proj_path = os.path.dirname(
-        os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-    )
-if proj_path not in sys.path:
-    sys.path.insert(1, proj_path)
-import textnlp.gutenberg as pkg
+path = os.path.dirname(os.path.dirname(__file__))
+if path not in sys.path:
+    sys.path.insert(1, path)
 
 logger = logging.getLogger(name=__name__)
 
 ZIP = pkg.ZIP
 TXT = pkg.TXT
-
 ALT = pkg.ALT
 alt_reg = re.compile(ALT)
 
-default_text_dir = pkg.default_text_dir
-zip_dir = os.path.join(default_text_dir, "zips")
-ascii_dir = os.path.join(default_text_dir, "ascii")
+
+def fetch_index():
+    """
+    """
+    return 0
 
 
 def fetch_document(
     id_code,
     mirror_url=pkg.DEFAULT_MIRROR,
     text_or_html='text',
-    zip_dir=zip_dir,
-):
+    zip_dir=zip_dir,):
     """
     """
     iterated_id = [x for x in str(id_code)]
-    dir_walk = (
-        [mirror_url] + iterated_id[:-1] + [str(id_code)]
-    )
+    dir_walk = ([mirror_url] + iterated_id[:-1] + [str(id_code)])
     fbn = f"{id_code}{ZIP}"
     fn_out = os.path.join(zip_dir, fbn)
     top_path = os.path.join(*dir_walk)
@@ -70,25 +65,21 @@ def fetch_document(
 
         logger.info(
             f"Project Gutenberg text #{id_code}"
-            f" downloaded to file://{zip_dir}."
-        )
+            f" downloaded to file://{zip_dir}.")
     else:
         logger.info(
             f"File #{id_code} already downloaded "
-            f"located at file://{path}."
-        )
+            f"located at file://{path}.")
     return 0
 
 
 def unpack_zip(
     id_code,
     ascii_dir=ascii_dir,
-    zip_dir=zip_dir,
-    ):
+    zip_dir=zip_dir,):
     """
     """
     extracted_files = []
-
     fn_out = os.path.join(ascii_dir, f"{id_code}{TXT}")
     fn_out_alt = os.path.join(ascii_dir, f"{id_code}{ALT}{TXT}")
     zip_pt = os.path.join(zip_dir, f"{id_code}{ZIP}")
@@ -97,8 +88,7 @@ def unpack_zip(
     elif os.path.exists(fn_out_alt):
         logger.info(
             f"File {id_code}{TXT} already exists "
-            f"as {id_code}{ALT}{TXT}."
-        )
+            f"as {id_code}{ALT}{TXT}.")
     else:
         try:
             with zipfile.ZipFile(zip_pt, mode='r') as zip_file:
@@ -113,17 +103,14 @@ def unpack_zip(
                     else:
                         new_fn = xtr_fn
                     logger.info(
-                        f"File extracted to file://{new_fn}"
-                    )
+                        f"File extracted to file://{new_fn}")
                     extracted_files.append(new_fn)
 
             logger.info(
                 f"Extraction of {id_code} completed "
-                f"to directory file://{ascii_dir}."
-            )
+                f"to directory file://{ascii_dir}.")
         except:
             logger.error('here is an error')
-
     return extracted_files
 
 
@@ -132,8 +119,7 @@ def fetch_unpack(
     ascii_dir=ascii_dir,
     zip_dir=zip_dir,
     mirror_url=pkg.DEFAULT_MIRROR,
-    text_or_html='text',
-    ):
+    text_or_html='text',):
     """
     """
     val = 0

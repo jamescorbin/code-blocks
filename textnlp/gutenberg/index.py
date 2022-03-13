@@ -8,13 +8,10 @@ import re
 
 import pandas as pd
 
-proj_path = os.path.dirname(
-        os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-    )
+proj_path = os.path.dirname(os.path.dirname(__file__))
 if proj_path not in sys.path:
     sys.path.insert(1, proj_path)
-import textnlp.gutenberg as pkg
-import textnlp.gutenberg.load_text as load_text
+import gutenberg.load as load
 
 default_index = pkg.default_index
 index_header = "\s*<==LISTINGS==>"
@@ -39,23 +36,19 @@ def load_index(fn=default_index):
     """
     text = load_text.load_text(fn, header=index_header, footer=footer)
     text_lines = text.split(split_char)
-
     skip_to = 0
     for i, x in enumerate(text_lines):
         if title_re.match(x):
             skip_to = i
             break
-
     title_info = []
     author_info = []
     ebook_no = []
     subtitle_info = []
     illustrator_info = []
     language_info = []
-
     title_buffer = ''
     ebook_buffer = ''
-
     for line in text_lines[skip_to+skip_2:]:
         if len(line)>0:
             reg = ebook_re.search(line)
@@ -119,7 +112,6 @@ def load_index(fn=default_index):
                 ebook_no.append(ebook_buffer)
             title_buffer = ''
             ebook_buffer = ''
-
     df = pd.DataFrame(
             {
                 "Title": title_info,
@@ -130,5 +122,4 @@ def load_index(fn=default_index):
                 "EBOOK NO.": ebook_no,
             }
         )
-
     return df
